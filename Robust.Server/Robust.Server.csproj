@@ -31,6 +31,7 @@
     <PackageReference Include="SharpZstd.Interop" PrivateAssets="compile" />
     <PackageReference Condition="'$(RobustToolsBuild)' == 'True'" Include="JetBrains.Profiler.Api" />
     <PackageReference Include="Microsoft.NET.ILLink.Tasks" />
+    <PackageReference Include="MathNet.Numerics" PrivateAssets="All" />
 
     <!-- Needed to pin transitive dependency versions. -->
     <PackageReference Include="System.Text.Json" />
