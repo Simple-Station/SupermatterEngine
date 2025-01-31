@@ -7,6 +7,7 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="JetBrains.Annotations" PrivateAssets="All" />
+    <PackageReference Include="MathNet.Numerics" PrivateAssets="All" />
   </ItemGroup>
 
   <Import Project="..\MSBuild\Robust.Properties.targets" />
