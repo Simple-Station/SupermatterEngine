@@ -43,7 +43,7 @@ END TEMPLATE-->
 
 ### Bugfixes
 
-* Fixed prototype reloading/hotloading not properly handling data-fields with the `AlwaysPushInheritanceAttribute`
+*None yet*
 
 ### Other
 
@@ -52,6 +52,105 @@ END TEMPLATE-->
 ### Internal
 
 *None yet*
+
+
+## 246.0.0
+
+### Breaking changes
+
+* The fixes to renderer state may have inadvertantly broken some rendering code that relied upon the old behavior.
+* TileRenderFlag has been removed and now it's just a byte flag on the tile for content usage.
+
+### New features
+
+* Add BeforeLighting overlay draw space for overlays that need to draw directly to lighting and want to do it immediately beforehand.
+* Change BlurLights to BlurRenderTarget and make it public for content usage.
+* Add ContentFlag to tiles for content-flag usage.
+* Add a basic mix shader for doing canvas blends.
+* Add GetClearColorEvent for content to override the clear color behavior.
+
+### Bugfixes
+
+* Fix pushing renderer state not restoring stencil status, blend status, queued shader instance scissor state.
+
+
+## 245.1.0
+
+### New features
+
+* Add more info to the AnchorEntity debug message.
+* Make ParseObject public where it will parse a supplied Type and string into the specified object.
+
+### Bugfixes
+
+* Fix EntityPrototypeView not always updating the entity correctly.
+* Tweak BUI shutdown to potentially avoid skipping closing.
+
+### Other
+
+* Increase Audio entity despawn buffer to avoid clipping.
+
+
+## 245.0.0
+
+### Breaking changes
+
+* `BoundUserInterface.Open()` now has the `MustCallBase` attribute
+
+### Bugfixes
+
+* Fixed an error in `MappingDataNode.TryAddCopy()`, which was causing yaml inheritance/deserialization bugs.
+
+
+## 244.0.0
+
+### Breaking changes
+
+* Increase physics speedcap default from 35m/s to 400m/s in-line with box2d v3.
+
+### New features
+
+* Add EntityManager overloads for ComponentRegistration that's faster than the generic methods.
+* Add CreateWindowCenteredRight for BUIs.
+
+### Bugfixes
+
+* Avoid calling UpdateState before opening a BUI.
+
+
+## 243.0.1
+
+### Bugfixes
+
+* Fixed `BaseWindow` sometimes not properly updating the mouse cursor shape.
+* Revert `BaseWindow` OnClose ordering due to prior reliance upon the ordering.
+
+
+## 243.0.0
+
+### Breaking changes
+
+* RemoveChild is called after OnClose for BaseWindow.
+
+### New features
+
+* BUIs now have their positions saved when closed and re-used when opened when using the `CreateWindow<T>` helper or via manually registering it via RegisterControl.
+
+### Other
+
+* Ensure grid fixtures get updated in client state handling even if exceptions occur.
+
+
+## 242.0.1
+
+### Bugfixes
+
+* Fixed prototype reloading/hotloading not properly handling data-fields with the `AlwaysPushInheritanceAttribute`
+* Fix the pooled polygons using incorrect vertices for EntityLookup and MapManager.
+
+### Internal
+
+* Avoid normalizing angles constructed from vectors.
 
 
 ## 242.0.0

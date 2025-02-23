@@ -50,11 +50,11 @@ namespace Robust.Shared.Network
                 var isLocal = IPAddress.IsLoopback(ip) && _config.GetCVar(CVars.AuthAllowLocal);
                 var canAuth = msgLogin.CanAuth;
                 var needPk = msgLogin.NeedPubKey;
-                var authServer = _config.GetCVar(CVars.AuthServer);
+                var authServer = msgLogin.AuthServer;
 
                 _logger.Verbose(
                     $"{connection.RemoteEndPoint}: Received MsgLoginStart. " +
-                    $"canAuth: {canAuth}, needPk: {needPk}, username: {msgLogin.UserName}, encrypt: {msgLogin.Encrypt}");
+                    $"canAuth: {canAuth}, needPk: {needPk}, username: {msgLogin.UserName}, auth server: {msgLogin.AuthServer}, encrypt: {msgLogin.Encrypt}");
 
                 _logger.Verbose(
                     $"{connection.RemoteEndPoint}: Connection is specialized local? {isLocal} ");
@@ -77,6 +77,13 @@ namespace Robust.Shared.Network
                 {
                     _logger.Verbose(
                         $"{connection.RemoteEndPoint}: Initiating authentication");
+
+                    var servers = _authManager.Servers.Select(s => s.AuthUrl.ToString()).ToArray();
+                    if (!servers.Contains(authServer))
+                    {
+                        connection.Disconnect($"Invalid or disallowed auth server {authServer}, needs to be one of {string.Join(", ", servers)}");
+                        return;
+                    }
 
                     var verifyToken = new byte[4];
                     RandomNumberGenerator.Fill(verifyToken);

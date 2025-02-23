@@ -942,12 +942,12 @@ namespace Robust.Shared
         public static readonly CVarDef<bool> AuthAllowLocal =
             CVarDef.Create("auth.allowlocal", true, CVar.SERVERONLY);
 
-        // Only respected on server, client goes through IAuthManager for security.
         /// <summary>
-        /// Authentication server address.
+        ///     List of comma separated URLs to use as whitelisted authentication servers
         /// </summary>
-        public static readonly CVarDef<string> AuthServer =
-            CVarDef.Create("auth.server", AuthManager.DefaultAuthServer, CVar.SERVERONLY);
+        /// <example>"Space-Wizards:https://auth.spacestation14.com/,SimpleStation:https://auth.simplestation.org/"</example>
+        public static readonly CVarDef<string> AuthServers =
+            CVarDef.Create("auth.servers", AuthServer.ToStringList(AuthManager.DefaultAuthServers), CVar.SERVERONLY);
 
         /*
          * RENDERING
@@ -1349,10 +1349,10 @@ namespace Robust.Shared
         /// MaxLinVelocity is compared to the dot product of linearVelocity * frameTime.
         /// </summary>
         /// <remarks>
-        /// Default is 35 m/s. Around half a tile per tick at 60 ticks per second.
+        /// Default is 400 m/s in-line with Box2c. Box2d used 120m/s.
         /// </remarks>
         public static readonly CVarDef<float> MaxLinVelocity =
-            CVarDef.Create("physics.maxlinvelocity", 35f, CVar.SERVER | CVar.REPLICATED);
+            CVarDef.Create("physics.maxlinvelocity", 400f, CVar.SERVER | CVar.REPLICATED);
 
         /// <summary>
         /// Maximum angular velocity in full rotations per second.
@@ -1363,7 +1363,6 @@ namespace Robust.Shared
         /// </remarks>
         public static readonly CVarDef<float> MaxAngVelocity =
             CVarDef.Create("physics.maxangvelocity", 15f);
-
 
         /*
          * User interface
