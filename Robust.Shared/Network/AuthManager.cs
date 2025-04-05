@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using Robust.Shared.Configuration;
 using Robust.Shared.Serialization;
 
 
@@ -15,6 +16,7 @@ namespace Robust.Shared.Network
     internal interface IAuthManager
     {
         public const string CustomServerId = "Custom";
+        public const string DefaultServerUrl = "https://auth.spacestation14.com/";
 
         NetUserId? UserId { get; set; }
         AuthServer UserServer { get; set; }
@@ -36,18 +38,19 @@ namespace Robust.Shared.Network
         public Uri AuthUrl { get; } = authUrl;
 
         /// Returns a string representation of the auth server
-        /// <example>"Space-Wizards:https://auth.spacestation14.com/"</example>
-        public override string ToString() => $"{Id}:{AuthUrl}";
+        /// <example>"Space-Wizards@https://auth.spacestation14.com/"</example>
+        public override string ToString() => $"{Id}@{AuthUrl}";
+
 
         /// Returns a string representation of a list of auth servers
-        /// <example>"Space-Wizards:https://auth.spacestation14.com/,SimpleStation:https://auth.simplestation.org/"</example>
+        /// <example>"Space-Wizards@https://auth.spacestation14.com/,SimpleStation@https://auth.simplestation.org/"</example>
         public static string ToStringList(HashSet<AuthServer> servers) => string.Join(',', servers.Select(s => s.ToString()));
 
         /// Takes a representation of an auth server and returns an AuthServer object
-        /// <example>"Space-Wizards:https://auth.spacestation14.com/"</example>
+        /// <example>"Space-Wizards@https://auth.spacestation14.com/"</example>
         public static AuthServer FromString(string str)
         {
-            var parts = str.Split(':');
+            var parts = str.Split('@');
             if (parts.Length != 2)
                 throw new ArgumentException($"Invalid auth server string: {str}");
 
@@ -55,8 +58,14 @@ namespace Robust.Shared.Network
         }
 
         /// Takes a list of auth server representations and returns a HashSet of AuthServer objects
-        /// <example>"Space-Wizards:https://auth.spacestation14.com/,SimpleStation:https://auth.simplestation.org/"</example>
+        /// <example>"Space-Wizards@https://auth.spacestation14.com/,SimpleStation@https://auth.simplestation.org/"</example>
         public static HashSet<AuthServer> FromStringList(string str) => new(str.Split(',').Select(FromString));
+
+        public static HashSet<AuthServer> FromCVarList(IConfigurationManager config) => FromStringList(config.GetCVar(CVars.AuthServers));
+
+        public static AuthServer? GetServerFromCVarListById(IConfigurationManager config, string id) => FromCVarList(config).FirstOrDefault(s => s.Id == id);
+        public static AuthServer? GetServerFromCVarListByUrl(IConfigurationManager config, Uri url) => FromCVarList(config).FirstOrDefault(s => s.AuthUrl == url);
+        public static AuthServer? GetServerFromCVarListByUrl(IConfigurationManager config, string url) => FromCVarList(config).FirstOrDefault(s => s.AuthUrl.ToString() == url);
     }
 
     internal sealed class AuthManager : IAuthManager

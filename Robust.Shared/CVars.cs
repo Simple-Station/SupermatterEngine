@@ -947,7 +947,7 @@ namespace Robust.Shared
         /// </summary>
         /// <example>"Space-Wizards:https://auth.spacestation14.com/,SimpleStation:https://auth.simplestation.org/"</example>
         public static readonly CVarDef<string> AuthServers =
-            CVarDef.Create("auth.servers", AuthServer.ToStringList(AuthManager.DefaultAuthServers), CVar.SERVERONLY);
+            CVarDef.Create("auth.servers", AuthServer.ToStringList(AuthManager.DefaultAuthServers), CVar.REPLICATED);
 
         /*
          * RENDERING

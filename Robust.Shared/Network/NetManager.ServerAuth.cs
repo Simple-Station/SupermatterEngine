@@ -175,7 +175,7 @@ namespace Robust.Shared.Network
                         legacyHwid = [];
                     }
 
-                    userData = new NetUserData(userId, joinedRespJson.UserData.UserName)
+                    userData = new(userId, joinedRespJson.UserData.UserName, authServer)
                     {
                         PatronTier = joinedRespJson.UserData.PatronTier,
                         HWId = legacyHwid,
@@ -221,7 +221,7 @@ namespace Robust.Shared.Network
                     _logger.Verbose(
                         $"{connection.RemoteEndPoint}: Assigned user ID: {userId}");
 
-                    userData = new NetUserData(userId, name)
+                    userData = new(userId, name, authServer)
                     {
                         HWId = [],
                         ModernHWIds = []
