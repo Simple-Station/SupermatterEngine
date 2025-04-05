@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using System.Text;
 using Robust.Server.Player;
+using Robust.Shared.Configuration;
 using Robust.Shared.Console;
 using Robust.Shared.IoC;
 using Robust.Shared.Network;
@@ -11,6 +12,7 @@ namespace Robust.Server.Console.Commands
     public sealed class ListPlayers : LocalizedCommands
     {
         [Dependency] private readonly IPlayerManager _players = default!;
+        [Dependency] private readonly IConfigurationManager _config = default!;
 
         public override string Command => "listplayers";
         public override void Execute(IConsoleShell shell, string argStr, string[] args)
@@ -22,17 +24,18 @@ namespace Robust.Server.Console.Commands
             var sb = new StringBuilder();
 
             var players = _players.Sessions;
-            sb.AppendLine($"{"Player Name",20} {"Status",12} {"Playing Time",14} {"Ping",9} {"IP EndPoint",20}");
-            sb.AppendLine("-------------------------------------------------------------------------------");
+            sb.AppendLine($"{"Player Name",20} {"Auth Server",16} {"Status",12} {"Playing Time",14} {"Ping",9} {"IP EndPoint",20}");
+            sb.AppendLine("-------------------------------------------------------------------------------------------------");
 
             foreach (var p in players)
             {
-                sb.AppendLine(string.Format("{4,20} {1,12} {2,14:hh\\:mm\\:ss} {3,9} {0,20}",
-                    p.Channel.RemoteEndPoint,
+                sb.AppendLine(string.Format("{0,20} {1,16} {2,12} {3,14:hh\\:mm\\:ss} {4,9} {5,20}",
+                    p.Name,
+                    AuthServer.GetServerFromCVarListByUrl(_config, p.Channel.UserData.AuthServer)?.Id,
                     p.Status.ToString(),
                     DateTime.UtcNow - p.ConnectedTime,
                     p.Channel.Ping + "ms",
-                    p.Name));
+                    p.Channel.RemoteEndPoint));
             }
 
             shell.WriteLine(sb.ToString());
