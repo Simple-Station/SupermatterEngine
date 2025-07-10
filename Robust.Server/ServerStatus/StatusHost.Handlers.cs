@@ -5,6 +5,7 @@ using System.Net;
 using System.Text.Json.Nodes;
 using System.Web;
 using Robust.Shared;
+using Robust.Shared.Network;
 using Robust.Shared.Utility;
 
 namespace Robust.Server.ServerStatus
@@ -52,16 +53,16 @@ namespace Robust.Server.ServerStatus
                 ["engine"] = buildInfo.EngineVersion,
             };
 
-            var tagsCache = _serverTagsCache;
-            if (tagsCache != null)
-            {
-                var tags = new JsonArray();
-                foreach (var tag in tagsCache)
-                {
-                    tags.Add(tag);
-                }
-                jObject["tags"] = tags;
-            }
+            var tags = new JsonArray();
+            foreach (var tag in _serverTagsCache)
+                tags.Add(tag);
+            jObject["tags"] = tags;
+
+            // Can't cast :(
+            var auths = new JsonArray();
+            foreach (var auth in AuthServer.FromCVarList(_cfg).Select(s => s.AuthUrl.AbsoluteUri))
+                auths.Add(auth);
+            jObject["auth_methods"] = auths;
 
             OnStatusRequest?.Invoke(jObject);
 
@@ -91,12 +92,16 @@ namespace Robust.Server.ServerStatus
                 buildInfo = GetExternalBuildInfo();
             }
 
+            var logins = new JsonArray();
+            foreach (var authServer in AuthServer.FromCVarList(_cfg))
+                logins.Add(authServer.AuthUrl);
             var authInfo = new JsonObject
             {
                 ["mode"] = _netManager.Auth.ToString(),
                 ["public_key"] = _netManager.CryptoPublicKey != null
                     ? Convert.ToBase64String(_netManager.CryptoPublicKey)
-                    : null
+                    : null,
+                ["login_urls"] = logins,
             };
 
             var jObject = new JsonObject
