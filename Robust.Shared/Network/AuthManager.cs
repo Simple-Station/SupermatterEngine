@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Robust.Shared.Configuration;
-using Robust.Shared.Serialization;
 
 
 namespace Robust.Shared.Network
@@ -86,6 +85,9 @@ namespace Robust.Shared.Network
 
         public void LoadFromEnv()
         {
+            if (TryGetVar("ROBUST_AUTH_SERVER", out var server))
+                UserServer = AuthServer.FromString("unset@" + server);
+
             if (TryGetVar("ROBUST_AUTH_SERVERS", out var servers))
                 Servers = AuthServer.FromStringList(servers);
 

@@ -24,12 +24,12 @@ namespace Robust.Server.Console.Commands
             var sb = new StringBuilder();
 
             var players = _players.Sessions;
-            sb.AppendLine($"{"Player Name",20} {"Auth Server",16} {"Status",12} {"Playing Time",14} {"Ping",9} {"IP EndPoint",20}");
-            sb.AppendLine("-------------------------------------------------------------------------------------------------");
+            sb.AppendLine($"{"Player Name",26} {"Auth Server",16} {"Status",12} {"Playing Time",14} {"Ping",9} {"IP EndPoint",20}");
+            sb.AppendLine(new('-', 26 + 16 + 12 + 14 + 9 + 20));
 
             foreach (var p in players)
             {
-                sb.AppendLine(string.Format("{0,20} {1,16} {2,12} {3,14:hh\\:mm\\:ss} {4,9} {5,20}",
+                sb.AppendLine(string.Format("{0,26} {1,16} {2,12} {3,14:hh\\:mm\\:ss} {4,9} {5,20}",
                     p.Name,
                     AuthServer.GetServerFromCVarListByUrl(_config, p.Channel.UserData.AuthServer)?.Id,
                     p.Status.ToString(),
