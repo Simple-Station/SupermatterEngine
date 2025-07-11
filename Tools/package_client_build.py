@@ -196,7 +196,7 @@ def build_linux(skip_build: bool, platform, name) -> None:
 
     client_zip = zipfile.ZipFile(
         p("release", "Robust.Client_%s.zip" % rid), "w",
-        compression=zipfile.ZIP_DEFLATED)
+        compression=zipfile.ZIP_DEFLATED, strict_timestamps=False)
 
     copy_dir_into_zip(p("bin", "Client", rid, "publish"), "", client_zip, IGNORED_FILES_LINUX)
     copy_resources("Resources", client_zip)

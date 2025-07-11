@@ -127,7 +127,7 @@ namespace Robust.Shared.Network
             var encrypt = _config.GetCVar(CVars.NetEncrypt);
             var authToken = _authManager.Token;
             var pubKey = _authManager.PubKey;
-            var authServer = _authManager.Server;
+            var authServer = _authManager.UserServer;
             var userId = _authManager.UserId;
 
             var hasPubKey = !string.IsNullOrEmpty(pubKey);
@@ -138,9 +138,10 @@ namespace Robust.Shared.Network
             var msgLogin = new MsgLoginStart
             {
                 UserName = userNameRequest,
+                AuthServer = authServer.AuthUrl.ToString(),
                 CanAuth = authenticate,
                 NeedPubKey = !hasPubKey,
-                Encrypt = encrypt
+                Encrypt = encrypt,
             };
 
             var outLoginMsg = peer.Peer.CreateMessage();
@@ -200,7 +201,7 @@ namespace Robust.Shared.Network
                 }
 
                 var joinReq = new JoinRequest(authHash, Base64Helpers.ToBase64Nullable(modernHwid));
-                var request = new HttpRequestMessage(HttpMethod.Post, authServer + "api/session/join");
+                var request = new HttpRequestMessage(HttpMethod.Post, authServer.AuthUrl + "api/session/join");
                 request.Content = JsonContent.Create(joinReq);
                 request.Headers.Authorization = new AuthenticationHeaderValue("SS14Auth", authToken);
                 var joinResp = await _http.Client.SendAsync(request, cancel);
