@@ -523,6 +523,9 @@ namespace Robust.Client.Graphics.Clyde
                     case Color color:
                         program.SetUniform(name, color);
                         break;
+                    case Color[] colorArr:
+                        program.SetUniform(name, colorArr);
+                        break;
                     case int i:
                         program.SetUniform(name, i);
                         break;
@@ -610,6 +613,8 @@ namespace Robust.Client.Graphics.Clyde
             EnsureBatchSpaceAvailable(4, GetQuadBatchIndexCount());
             EnsureBatchState(texture, true, GetQuadBatchPrimitiveType(), _queuedShader);
 
+            // TODO RENDERING
+            // It's probably better to do this on the GPU.
             bl = Vector2.Transform(bl, _currentMatrixModel);
             br = Vector2.Transform(br, _currentMatrixModel);
             tr = Vector2.Transform(tr, _currentMatrixModel);

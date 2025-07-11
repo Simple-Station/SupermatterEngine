@@ -66,6 +66,7 @@ namespace Robust.Server.ServerStatus
 
             OnStatusRequest?.Invoke(jObject);
 
+            context.AddAllowOriginAny();
             await context.RespondJsonAsync(jObject);
 
             return true;
@@ -130,6 +131,7 @@ namespace Robust.Server.ServerStatus
 
             OnInfoRequest?.Invoke(jObject);
 
+            context.AddAllowOriginAny();
             await context.RespondJsonAsync(jObject);
 
             return true;

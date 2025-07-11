@@ -72,6 +72,11 @@ namespace Robust.Client.Graphics.Clyde
             return new DummyTexture((1, 1));
         }
 
+        public IEnumerable<(Clyde.ClydeTexture, Clyde.LoadedTexture)> GetLoadedTextures()
+        {
+            return [];
+        }
+
         public ClydeDebugLayers DebugLayers { get; set; }
 
         public string GetKeyName(Keyboard.Key key) => string.Empty;
@@ -366,6 +371,10 @@ namespace Robust.Client.Graphics.Clyde
             }
 
             private protected override void SetParameterImpl(string name, Color value)
+            {
+            }
+
+            private protected override void SetParameterImpl(string name, Color[] value)
             {
             }
 
