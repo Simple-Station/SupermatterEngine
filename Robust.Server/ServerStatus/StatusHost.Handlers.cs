@@ -5,6 +5,7 @@ using System.Net;
 using System.Text.Json.Nodes;
 using System.Web;
 using Robust.Shared;
+using Robust.Shared.Network;
 using Robust.Shared.Utility;
 
 namespace Robust.Server.ServerStatus
@@ -39,25 +40,29 @@ namespace Robust.Server.ServerStatus
                 return false;
             }
 
+            var buildInfo = GameBuildInformation.GetBuildInfoFromConfig(_cfg);
+
             var jObject = new JsonObject
             {
                 // We need to send at LEAST name and player count to have the launcher work with us.
                 // Tags is optional technically but will be necessary practically for future organization.
                 // Content can override these if it wants (e.g. stealthmins).
                 ["name"] = _serverNameCache,
-                ["players"] = _playerManager.PlayerCount
+                ["players"] = _playerManager.PlayerCount,
+                ["engine_type"] = buildInfo.EngineType,
+                ["engine"] = buildInfo.EngineVersion,
             };
 
-            var tagsCache = _serverTagsCache;
-            if (tagsCache != null)
-            {
-                var tags = new JsonArray();
-                foreach (var tag in tagsCache)
-                {
-                    tags.Add(tag);
-                }
-                jObject["tags"] = tags;
-            }
+            var tags = new JsonArray();
+            foreach (var tag in _serverTagsCache)
+                tags.Add(tag);
+            jObject["tags"] = tags;
+
+            // Can't cast :(
+            var auths = new JsonArray();
+            foreach (var auth in AuthServer.FromCVarList(_cfg).Select(s => s.AuthUrl.AbsoluteUri))
+                auths.Add(auth);
+            jObject["auth_methods"] = auths;
 
             OnStatusRequest?.Invoke(jObject);
 
@@ -88,12 +93,16 @@ namespace Robust.Server.ServerStatus
                 buildInfo = GetExternalBuildInfo();
             }
 
+            var logins = new JsonArray();
+            foreach (var authServer in AuthServer.FromCVarList(_cfg))
+                logins.Add(authServer.AuthUrl);
             var authInfo = new JsonObject
             {
                 ["mode"] = _netManager.Auth.ToString(),
                 ["public_key"] = _netManager.CryptoPublicKey != null
                     ? Convert.ToBase64String(_netManager.CryptoPublicKey)
-                    : null
+                    : null,
+                ["login_urls"] = logins,
             };
 
             var jObject = new JsonObject
@@ -134,6 +143,7 @@ namespace Robust.Server.ServerStatus
 
             return new JsonObject
             {
+                ["engine_type"] = buildInfo.EngineType,
                 ["engine_version"] = buildInfo.EngineVersion,
                 ["fork_id"] = buildInfo.ForkId,
                 ["version"] = buildInfo.Version,
@@ -160,6 +170,7 @@ namespace Robust.Server.ServerStatus
             }
             return new JsonObject
             {
+                ["engine_type"] = _cfg.GetCVar(CVars.BuildEngineType),
                 ["engine_version"] = _cfg.GetCVar(CVars.BuildEngineVersion),
                 ["fork_id"] = fork,
                 ["version"] = acm.ManifestHash,
