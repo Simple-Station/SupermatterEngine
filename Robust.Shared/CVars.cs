@@ -951,7 +951,7 @@ namespace Robust.Shared
         /// <summary>
         ///     List of comma separated URLs to use as whitelisted authentication servers
         /// </summary>
-        /// <example>"Space-Wizards:https://auth.spacestation14.com/,SimpleStation:https://auth.simplestation.org/"</example>
+        /// <example>"Space-Wizards@https://auth.spacestation14.com/,SimpleStation@https://auth.simplestation.org/"</example>
         public static readonly CVarDef<string> AuthServers =
             CVarDef.Create("auth.servers", AuthServer.ToStringList(AuthManager.DefaultAuthServers), CVar.REPLICATED);
 
