@@ -19,11 +19,12 @@ namespace Robust.Shared.Network.Messages.Handshake
         {
             var name = buffer.ReadString();
             var id = buffer.ReadGuid();
+            var authServer = buffer.ReadString();
             var patreonTier = buffer.ReadString();
             if (patreonTier.Length == 0)
                 patreonTier = null;
 
-            UserData = new NetUserData(new NetUserId(id), name) {PatronTier = patreonTier};
+            UserData = new(new(id), name, authServer) {PatronTier = patreonTier};
             Type = (LoginType) buffer.ReadByte();
         }
 
@@ -31,6 +32,7 @@ namespace Robust.Shared.Network.Messages.Handshake
         {
             buffer.Write(UserData.UserName);
             buffer.Write(UserData.UserId);
+            buffer.Write(UserData.AuthServer);
             buffer.Write(UserData.PatronTier);
             buffer.Write((byte) Type);
             buffer.Write(new byte[100]);

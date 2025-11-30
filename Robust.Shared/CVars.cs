@@ -670,6 +670,12 @@ namespace Robust.Shared
          */
 
         /// <summary>
+        /// Engine type the launcher needs to connect to this server.
+        /// </summary>
+        public static readonly CVarDef<string> BuildEngineType =
+            CVarDef.Create("build.engine_type", "Supermatter");
+
+        /// <summary>
         /// Engine version that launcher needs to connect to this server.
         /// </summary>
         public static readonly CVarDef<string> BuildEngineVersion =
@@ -942,12 +948,12 @@ namespace Robust.Shared
         public static readonly CVarDef<bool> AuthAllowLocal =
             CVarDef.Create("auth.allowlocal", true, CVar.SERVERONLY);
 
-        // Only respected on server, client goes through IAuthManager for security.
         /// <summary>
-        /// Authentication server address.
+        ///     List of comma separated URLs to use as whitelisted authentication servers
         /// </summary>
-        public static readonly CVarDef<string> AuthServer =
-            CVarDef.Create("auth.server", AuthManager.DefaultAuthServer, CVar.SERVERONLY);
+        /// <example>"Space-Wizards@https://auth.spacestation14.com/,SimpleStation@https://auth.simplestation.org/"</example>
+        public static readonly CVarDef<string> AuthServers =
+            CVarDef.Create("auth.servers", AuthServer.ToStringList(AuthManager.DefaultAuthServers), CVar.REPLICATED);
 
         /*
          * RENDERING

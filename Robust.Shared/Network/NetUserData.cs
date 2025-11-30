@@ -7,14 +7,11 @@ namespace Robust.Shared.Network
     /// <summary>
     ///     Contains data about players returned from auth server.
     /// </summary>
-    public sealed record NetUserData
+    public sealed record NetUserData(
+        [property: ViewVariables] NetUserId UserId,
+        [property: ViewVariables] string UserName,
+        [property: ViewVariables] string AuthServer = IAuthManager.DefaultServerUrl)
     {
-        [ViewVariables]
-        public NetUserId UserId { get; }
-
-        [ViewVariables]
-        public string UserName { get; }
-
         [ViewVariables]
         public string? PatronTier { get; init; }
 
@@ -36,12 +33,6 @@ namespace Robust.Shared.Network
         /// A value of 0.5 can be considered "neutral", 1 being "fully trusted".
         /// </remarks>
         public float Trust { get; init; }
-
-        public NetUserData(NetUserId userId, string userName)
-        {
-            UserId = userId;
-            UserName = userName;
-        }
 
         public sealed override string ToString()
         {

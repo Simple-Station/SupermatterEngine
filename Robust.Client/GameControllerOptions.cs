@@ -1,3 +1,4 @@
+using System;
 using Robust.Shared;
 using Robust.Shared.Utility;
 
@@ -19,7 +20,7 @@ namespace Robust.Client
         /// <summary>
         ///     Name the userdata directory will have.
         /// </summary>
-        public string UserDataDirectoryName { get; init; } = "Space Station 14";
+        public string UserDataDirectoryName { get; init; } = Environment.GetEnvironmentVariable("SS14_LAUNCHER_DATADIR") ?? "SimpleStation14";
 
         /// <summary>
         ///     Name of the configuration file in the user data directory.
