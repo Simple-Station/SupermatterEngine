@@ -26,6 +26,7 @@
     <PackageReference Include="SpaceWizards.Sodium" PrivateAssets="compile" />
     <PackageReference Include="Microsoft.NET.ILLink.Tasks" />
     <PackageReference Include="TerraFX.Interop.Xlib" />
+    <PackageReference Include="MathNet.Numerics" PrivateAssets="All" />
 
     <!-- Needed to pin transitive dependency versions. -->
     <PackageReference Include="System.Text.Json" />
