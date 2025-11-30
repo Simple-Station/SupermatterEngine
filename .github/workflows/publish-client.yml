@@ -49,4 +49,4 @@ jobs:
           host: ${{ vars.ENGINE_BUILDS_HOST }}
           username: ${{ vars.ENGINE_BUILDS_PUSH_USER }}
           key: ${{ secrets.ENGINE_BUILDS_PUSH_KEY }}
-          script: /home/robust-build-push/push.ps1 ${{ steps.parse_version.outputs.version }}
+          script: /home/${{ vars.ENGINE_BUILDS_PUSH_USER }}/engineManifestGenerator/bin/Release/net7.0/ss14ManifestGenerator ${{ steps.parse_version.outputs.version }}
